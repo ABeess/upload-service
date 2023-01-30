@@ -1,0 +1,13 @@
+version: '3.7'
+services:
+  upload_service:
+    image: abeesdevjs/upload-service:0.0.06
+    ports:
+      - '3009:3009'
+    restart: unless-stopped
+    environment:
+      - CONFIG_PORT=3009
+      - CONFIG_MONGO_URI=mongodb://178.128.48.4:27017/nestjs
+      - CONFIG_DOMAIN=http://178.128.48.4:3009
+    volumes:
+      - ./data:/SERVICE/public
