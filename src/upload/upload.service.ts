@@ -5,6 +5,8 @@ import { Upload, UploadDocument } from './entities/upload.entity';
 import fs from 'fs';
 import { generateFileName } from '../util/generate-name';
 import { CatchException } from '../util/ exception.response';
+import { FiletypeEnum } from './enum/filetype.enum';
+import {UploadResponse} from "./reponse/upload.response";
 
 @Injectable()
 export class UploadService {
@@ -12,13 +14,6 @@ export class UploadService {
 
   async newDocument(data: Partial<Upload>) {
     return await new this.uploadModel(data).save();
-  }
-
-  async create() {
-    return await this.newDocument({
-      mimetype: '',
-      url: 'asd',
-    });
   }
 
   async uploadMultiple(files: Express.Multer.File[]) {
@@ -31,8 +26,8 @@ export class UploadService {
 
   async uploadFile(file: Express.Multer.File) {
     try {
-      const mimetype = file.mimetype.split('/')[0];
-      const path = `public/resource/${mimetype}`;
+      const fileExtension = file.mimetype.split('/')[0].toLowerCase();
+      const path = `public/resource/${fileExtension}`;
       if (!fs.existsSync(path)) {
         fs.mkdirSync(path, { recursive: true });
       }
@@ -42,13 +37,30 @@ export class UploadService {
       const url = `${path}/${fileGenerate.fileName}`;
       fs.writeFileSync(url, file.buffer);
 
-      return await this.newDocument({
-        type: fileGenerate.type,
+      const newUpload = await this.newDocument({
+        type: this.generateFile(fileExtension),
         url: `/${url}`,
-        mimetype,
+        mimetype: file.mimetype,
       });
+
+        return new UploadResponse(newUpload);
     } catch (error) {
       throw new CatchException(error);
+    }
+  }
+
+  generateFile(mimetype: string) {
+    switch (mimetype) {
+      case 'image':
+        return FiletypeEnum.IMAGE;
+      case 'video':
+        return FiletypeEnum.VIDEO;
+      case 'audio':
+        return FiletypeEnum.AUDIO;
+      case 'file':
+        return FiletypeEnum.FILE;
+      default:
+        return FiletypeEnum.FILE;
     }
   }
 }

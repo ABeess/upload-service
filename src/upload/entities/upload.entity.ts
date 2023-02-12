@@ -20,10 +20,10 @@ export class Upload {
   mimetype: string;
 
   @Prop({
-    type: String,
-    default: '',
+    type: Number,
+    default: 0,
   })
-  type: string;
+  type: number;
 }
 
 export const UploadSchema = SchemaFactory.createForClass(Upload);

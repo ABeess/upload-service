@@ -5,10 +5,11 @@ interface FileName {
 }
 
 export const generateFileName = (originalname: string): FileName => {
-  const fileType = originalname.split('.');
+  const fileExtension = originalname.split('.');
   const newUuid = uuid().replace(/-/g, '');
+
   return {
-    fileName: fileType ? `${newUuid}.${fileType[fileType.length - 1]}` : newUuid,
-    type: fileType[fileType.length - 1],
+    fileName: fileExtension ? `${newUuid}.${fileExtension[fileExtension.length - 1]}` : newUuid,
+    type: fileExtension[fileExtension.length - 1],
   };
 };

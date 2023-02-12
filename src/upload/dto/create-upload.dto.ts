@@ -1,3 +1,3 @@
-export class CreateUploadDto {
-  type: number;
+export class UploadSingleFileDto {
+  file: number;
 }
