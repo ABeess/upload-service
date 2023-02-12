@@ -28,4 +28,4 @@ jobs:
           file: ./deploy/Dockerfile
           builder: ${{ steps.buildx.outputs.name }}
           push: true
-          tags: 'abeesdevjs/abeesdevjs/upload-service:${{  github.ref_name }}'
+          tags: 'abeesdevjs/upload-service:${{  github.ref_name }}'
